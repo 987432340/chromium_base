@@ -7,6 +7,8 @@
 #include "base/threading/sequenced_worker_pool.h"
 #include "base/threading/thread.h"
 #include <iostream>
+#include "base/logging.h"
+
 using namespace std;
 
 class Foo 
@@ -61,13 +63,30 @@ private:
 scoped_refptr<Foo> test;
 
 int main(int argc, char* argv[]) {
-    cout << "test!!!" << endl; 
+    //cout << "test!!!" << endl; 
 
-    test = new Foo(10);
-    while (true) {
-        test->work();
-        test->ordered_tasks();
-    }
+    //test = new Foo(10);
+    //while (true) {
+    //    test->work();
+    //    test->ordered_tasks();
+    //}
+	logging::LoggingSettings settings;
+	settings.logging_dest = logging::LOG_TO_ALL;
+	logging::InitLogging(settings);
 
+	//log是否记录进程id,线程id,时间戳，精确时间
+	logging::SetLogItems(true, true, false, false);
+
+	LOG(INFO) << "测试";
+	LOG(WARNING) << "WARNING测试";
+	/*DLOG(INFO) << "INFO";
+	DLOG(WARNING) << "WARNING";
+	DLOG(ERROR) << "ERROR";
+	*/
+	//LOG_IF(INFO, true) << "LOG_IF INFO";
+	//LOG_IF(WARNING, false) << "LOG_IF WARNING";
+	//LOG_IF(ERROR, true) << "LOG_IF ERROR";
+	//logging::LOG_INFO
+	system("pause");
     return 0;
 }
