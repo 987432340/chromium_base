@@ -807,5 +807,5 @@ std::wstring GetLogFileFullPath() {
 }  // namespace logging
 
 std::ostream& std::operator<<(std::ostream& out, const wchar_t* wstr) {
-  return out << base::WideToUTF8(wstr);
+	return out << base::WideToUTF8(wstr);
 }

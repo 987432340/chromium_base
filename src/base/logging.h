@@ -62,6 +62,7 @@
 //
 //   DLOG_IF(INFO, num_cookies > 10) << "Got lots of cookies";
 //
+// 调试模式的宏（DLOG）不会被Release模式编译到二进制文件，但是(LOG)会编译进去
 // All "debug mode" logging is compiled away to nothing for non-debug mode
 // compiles.  LOG_IF and development flags also work well together
 // because the code can be compiled away sometimes.

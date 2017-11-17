@@ -8,77 +8,41 @@
 #include "base/threading/thread.h"
 #include <iostream>
 #include "base/logging.h"
+#include "base/command_line.h"
+#include "base/at_exit.h"
+
 
 using namespace std;
 
-class Foo 
-    : public base::RefCountedThreadSafe<Foo> {
-public:
-    Foo(int t) 
-      : a_(t),
-        worker_pool_(new base::SequencedWorkerPool(3, "fangr_")) { 
-    }
-
-    ~Foo() {
-        worker_pool_->Shutdown();
-    }
-
-    void work() {
-        worker_pool_->PostWorkerTask(FROM_HERE, base::Bind(&Foo::DoWork, this));
-    }
-
-    void ordered_tasks() {
-        base::SequencedWorkerPool::SequenceToken token = worker_pool_->GetSequenceToken();
-
-        worker_pool_->PostSequencedWorkerTask(token, FROM_HERE, base::Bind(&Foo::DoTask1, this));
-
-        worker_pool_->PostSequencedWorkerTask(token, FROM_HERE, base::Bind(&Foo::DoTask2, this));
-    }
-
-private:
-    void DoWork() {  
-        for (int i = -10; i < a_; ++i) {
-            cout << i << ",\t";
-        }
-    }
-
-    void DoTask1() {
-        for (int i = 0; i < 10; ++i) {
-            cout << 'a' + i << "|\t";
-        }
-    }
-
-    void DoTask2() {
-        for (int i = 1; i < 10; ++i) {
-            cout << "foo" << "$\t";
-        }
-    }
-
-private:
-    scoped_refptr<base::SequencedWorkerPool> worker_pool_;
-
-    int a_;
-};
-
-scoped_refptr<Foo> test;
-
 int main(int argc, char* argv[]) {
-    //cout << "test!!!" << endl; 
+	
+	// 初始化命令行
+	base::CommandLine::Init(argc, argv);
+	//base::AtExitManager at_exit;
 
-    //test = new Foo(10);
-    //while (true) {
-    //    test->work();
-    //    test->ordered_tasks();
-    //}
 	logging::LoggingSettings settings;
+	
 	settings.logging_dest = logging::LOG_TO_ALL;
+	// log的文件名
+	settings.log_file = L"test_base.log";
+
 	logging::InitLogging(settings);
 
 	//log是否记录进程id,线程id,时间戳，精确时间
 	logging::SetLogItems(true, true, false, false);
 
 	LOG(INFO) << "测试";
-	LOG(WARNING) << "WARNING测试";
+	LOG(INFO) << L"Test";		// 正常显示
+	LOG(INFO) << L"中国";		// 会乱码，因为宽字符输出流被重载，使用UTF8转换，所以不支持宽字符的中文输出
+	// 条件输出
+	LOG_IF(WARNING, true) << "LOG_IF true";
+	LOG_IF(WARNING, false) << "LOG_IF false";
+	
+	// CHECK宏在debug、relesse模式下都好使。CHECK的condition如果=false，会调用LOG(FATAL)。LOG(FATAL)会结束进程，并生成dump
+	// ~LogMessage
+	CHECK(false);
+	CHECK(true);
+
 	/*DLOG(INFO) << "INFO";
 	DLOG(WARNING) << "WARNING";
 	DLOG(ERROR) << "ERROR";

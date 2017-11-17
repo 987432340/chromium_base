@@ -14,17 +14,20 @@
 
 namespace base {
 
-// This class provides a facility similar to the CRT atexit(), except that
+// 除了像 CRT atexit()以外，我们的callbacks被执行。此组件大部分时候被Singleton使用
+// This class provides a facility(设施) similar to the CRT atexit(), except that
 // we control when the callbacks are executed. Under Windows for a DLL they
 // happen at a really bad time and under the loader lock. This facility is
 // mostly used by base::Singleton.
 //
 // The usage is simple. Early in the main() or WinMain() scope create an
 // AtExitManager object on the stack:
+// 使用很简单，在WinMain的空间中在栈上创建AtExitManager对象
 // int main(...) {
 //    base::AtExitManager exit_manager;
 //
 // }
+// 当exit_manager对象超出范围，所有的注册回调函数和单例模式的析构函数会被调用
 // When the exit_manager object goes out of scope, all the registered
 // callbacks and singleton destructors will be called.
 
