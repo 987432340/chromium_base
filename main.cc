@@ -34,23 +34,29 @@ int main(int argc, char* argv[]) {
 	LOG(INFO) << "测试";
 	LOG(INFO) << L"Test";		// 正常显示
 	LOG(INFO) << L"中国";		// 会乱码，因为宽字符输出流被重载，使用UTF8转换，所以不支持宽字符的中文输出
+
 	// 条件输出
 	LOG_IF(WARNING, true) << "LOG_IF true";
 	LOG_IF(WARNING, false) << "LOG_IF false";
-	
-	// CHECK宏在debug、relesse模式下都好使。CHECK的condition如果=false，会调用LOG(FATAL)。LOG(FATAL)会结束进程，并生成dump
-	// ~LogMessage
-	CHECK(false);
-	CHECK(true);
 
-	/*DLOG(INFO) << "INFO";
+	// 以上的日志在DEBUG模式下打日志加前缀D
+	/*
+	DLOG(INFO) << "INFO";
 	DLOG(WARNING) << "WARNING";
 	DLOG(ERROR) << "ERROR";
 	*/
-	//LOG_IF(INFO, true) << "LOG_IF INFO";
-	//LOG_IF(WARNING, false) << "LOG_IF WARNING";
-	//LOG_IF(ERROR, true) << "LOG_IF ERROR";
-	//logging::LOG_INFO
+
+	// CHECK宏在debug、relesse模式下都好使
+	//CHECK(false);	// CHECK的condition如果=false，会调用LOG(FATAL)。LOG(FATAL)会在~LogMessage时结束进程，并生成dump
+	CHECK(true);  // CHECK的condition如果=True 正常执行
+
+	// 同CHECK，有DLOG_ASSERT
+	LOG_ASSERT(true); // LOG_IF(FATAL, !(condition))
+
+	// VLOG本质是LOG(INFO)，在INFO之下又分级
+	VLOG(1) << "I'm printed when you run the program with --v=1 or more";
+
+	//VLOG
 	system("pause");
     return 0;
 }
