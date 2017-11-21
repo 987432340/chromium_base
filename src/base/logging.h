@@ -91,7 +91,7 @@
 //     "chromeos" directory.
 //   e. VLOG(0) and lower messages to be printed from elsewhere
 //
-// The wildcarding functionality shown by (c) supports both '*' (match
+// The wildcarding(通配符) functionality shown by (c) supports both '*' (match
 // 0 or more characters) and '?' (match any single character)
 // wildcards.  Any pattern containing a forward or backward slash will
 // be tested against the whole pathname and not just the module.
@@ -100,11 +100,13 @@
 //
 // There's also VLOG_IS_ON(n) "verbose level" condition macro. To be used as
 //
+// VLOG 特定等级日志
 //   if (VLOG_IS_ON(2)) {
 //     // do some logging preparation and logging
 //     // that can't be accomplished with just VLOG(2) << ...;
 //   }
 //
+// VLOG条件日志
 // There is also a VLOG_IF "verbose level" condition macro for sample
 // cases, when some extra computation and preparation for logs is not
 // needed.
@@ -115,6 +117,7 @@
 //
 // We also override the standard 'assert' to use 'DLOG_ASSERT'.
 //
+// 带lastError的日志输出
 // Lastly, there is:
 //
 //   PLOG(ERROR) << "Couldn't do foo";
@@ -133,6 +136,7 @@
 // Very important: logging a message at the FATAL severity level causes
 // the program to terminate (after the message is logged).
 //
+// DFATAL等级的日志在debug模式是FATAL，debug模式是ERROR等级
 // There is the special severity of DFATAL, which logs FATAL in debug mode,
 // ERROR in normal mode.
 
